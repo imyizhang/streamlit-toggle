@@ -3,7 +3,7 @@
 
 from typing import Any, Callable, Optional
 import sys
-import pathlib
+import os
 
 import streamlit as st
 import toml
@@ -103,30 +103,43 @@ def toggle(
     raise ValueError(f"widget '{widget}' is not supported")
 
 
-def _config(path: str) -> pathlib.Path:
-    """Create the configuration file given the path of Streamlit app. If it
-    already exists, just return the file path.
+def _config(path: str) -> str:
+    """Return the Streamlit configuration file path given the path of Streamlit
+    app. If the file does not exists, create it. If a `PermissionError`
+    is raised, return the name of the Streamlit environment variable
+    correspondingly.
     """
-    path = pathlib.Path(path).parent.joinpath('.streamlit/config.toml')
-    path.parent.mkdir(parents=False, exist_ok=True)
-    if not path.exists():
-        with path.open(mode='w') as _:
-            pass
+    path = os.path.join(os.path.dirname(path), '.streamlit/config.toml')
+    try:
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        if not os.path.exists(path):
+            with open(path, mode='w') as _:
+                pass
+    except PermissionError:
+        path = 'STREAMLIT_THEME_BASE'
+    print(f'Streamlit configuration: {path}')
     return path
 
 
 def _theme(
-    config: pathlib.Path,
+    config: str,
     value: bool,
     key: str = 'theming',
 ) -> None:
-    """Overwrite the theme setting in the configuration file."""
+    """Overwrite the theme setting."""
     if key not in st.session_state:
         st.session_state[key] = value
     st.session_state[key] = not st.session_state[key]
-    options = toml.load(config)
-    options['theme'] = {'base': 'dark' if st.session_state[key] else 'light'}
-    toml.dump(options, config.open(mode='w'))
+    if os.path.exists(config):
+        options = toml.load(config)
+        options['theme'] = {
+            'base': 'dark' if st.session_state[key] else 'light'
+        }
+        toml.dump(options, open(config, mode='w'))
+        print('overwrite the Streamlit configuration file')
+    else:
+        os.environ[config] = 'dark' if st.session_state[key] else 'light'
+        print('overwrite the Streamlit environment variable')
 
 
 def theme(
