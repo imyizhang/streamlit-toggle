@@ -1,0 +1,15 @@
+# Byte-compiled
+__pycache__/
+
+# Distribution / packaging
+build/
+dist/
+*.egg
+*.egg-info/
+
+# Streamlit
+.streamlit/
+#.streamlit/secrets.toml
+
+# Desktop Services Store
+.DS_Store
