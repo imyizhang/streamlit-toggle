@@ -45,6 +45,9 @@ def app():
     st.markdown(BADGE)
     space()
     st.write('Add toggle switches to your Streamlit app.')
+    st.write(
+        '> **Warning**: the Streamlit Light and Dark theme toggle switch does NOT take effet at runtime.'
+    )
     space(lines=lines)
     st.header('Installation')
     st.code('pip install streamlit-toggle', language='bash')
