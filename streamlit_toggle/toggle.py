@@ -4,6 +4,9 @@
 from typing import Any, Callable, Optional
 import sys
 import os
+import logging
+
+logger = logging.getLogger(__name__)
 
 import streamlit as st
 import toml
@@ -117,7 +120,6 @@ def _config(path: str) -> str:
                 pass
     except PermissionError:
         path = 'STREAMLIT_THEME_BASE'
-    print(f'Streamlit configuration: {path}')
     return path
 
 
@@ -136,10 +138,10 @@ def _theme(
             'base': 'dark' if st.session_state[key] else 'light'
         }
         toml.dump(options, open(config, mode='w'))
-        print('overwrite the Streamlit configuration file')
+        logger.info('overwrite the Streamlit configuration file')
     else:
         os.environ[config] = 'dark' if st.session_state[key] else 'light'
-        print('overwrite the Streamlit environment variable')
+        logger.info('overwrite the Streamlit environment variable')
 
 
 def theme(
@@ -176,6 +178,8 @@ def theme(
     """
     if path is None:
         path = sys._getframe(1).f_globals['__file__']
+    config = _config(path)
+    logger.info(f'using Streamlit configuration: {config}')
     return toggle(
         container=container,
         widget=widget,
@@ -184,6 +188,6 @@ def theme(
         key=key,
         help=help,
         on_change=_theme,
-        args=(_config(path), value),
+        args=(config, value),
         disabled=disabled,
     )
