@@ -8,8 +8,7 @@ dist/
 *.egg-info/
 
 # Streamlit
-.streamlit/
-#.streamlit/secrets.toml
+.streamlit/secrets.toml
 
 # Desktop Services Store
 .DS_Store

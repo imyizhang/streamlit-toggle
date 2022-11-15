@@ -37,7 +37,7 @@ def app():
     dark = theme(st.sidebar, widget='checkbox', label='Dark', value=False)
     space(st.sidebar)
     st.sidebar.title('Spacing')
-    lines = st.sidebar.slider('lines', 0, 10, 5, 1)
+    lines = st.sidebar.slider('lines', 0, 10, 2, 1)
     space(st.sidebar)
     st.sidebar.caption(f'Streamlit {st.__version__}')
     # page
@@ -56,8 +56,8 @@ def app():
     st.write(
         'Streamlit Toggle has an MIT license, as found in the [LICENSE](https://github.com/imyizhang/streamlit-toggle/blob/main/LICENSE) file.'
     )
-    base = 'Dark' if dark else 'Light'
     space()
+    base = 'Dark' if dark else 'Light'
     st.caption(f'Streamlit {base} theme')
 
 
