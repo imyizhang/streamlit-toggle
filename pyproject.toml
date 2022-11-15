@@ -9,7 +9,7 @@ homepage = "https://st-toggle.streamlit.app"
 repository = "https://github.com/imyizhang/streamlit-toggle"
 
 [tool.poetry.dependencies]
-python = "^3.10"
+python = "^3.7, !=3.9.7"
 streamlit = "^1.14.0"
 streamlit-space = "^0.1.3"
 
